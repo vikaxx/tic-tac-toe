@@ -1,39 +1,45 @@
 package my.repo;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class XO {
-    enum Item {X, O, NONE};
 
     public static void main(String[] args) {
+        Field gameField = new Field();
+        Item[][] field = gameField.createField();
 
-        Item[][] field = {
-                {Item.NONE, Item.NONE, Item.NONE},
-                {Item.NONE, Item.NONE, Item.NONE},
-                {Item.NONE, Item.NONE, Item.NONE}
-        };
-
-        Scanner in = new Scanner(System.in);
-
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         boolean isEndGame = false;
         boolean isX = true;
 
-        int row, col;
+        int row = 0;
+        int col = 0;
         while (!isEndGame) {
             outPut(field);
             if (isX) System.out.println("\nКрестики ходят! Сделайте ваш ход.");
             else System.out.println("\nНолики ходят! Сделайте ваш ход.");
-
-            row = in.nextInt() - 1;
-            col = in.nextInt() - 1;
-
-            if (row > 3 || row < 0) {
-                System.out.println("Ошибка. Выберите строку от 1 до 3");
-                continue;
-            } else if (col > 3 || col < 0) {
-                System.out.println("Ошибка. Выберите столбец от 1 до 3.");
-                continue;
+//            String line = reader.readLine();
+            try {
+                row = Integer.parseInt(reader.readLine())-1;
+                if (row > 3 || row < 0) {
+                    System.out.println("Ошибка. Выберите строку от 1 до 3");
+                    continue;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            try {
+                col = Integer.parseInt(reader.readLine())-1;
+                if (col > 3 || col < 0) {
+                    System.out.println("Ошибка. Выберите столбец от 1 до 3.");
+                    continue;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
             switch (field[row][col]) {
                 case X:
@@ -72,8 +78,7 @@ public class XO {
         if (isWin(field)) {
             if (isX) System.out.println("Нолики выиграли!");
             else System.out.println("Крестики выиграли!");
-        }
-        else System.out.println("Ничья!");
+        } else System.out.println("Ничья!");
 
 
     } // end of main function
