@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import static my.repo.Item.O;
+import static my.repo.Item.X;
+
 public class XO {
 
     public static void main(String[] args) {
@@ -12,61 +15,78 @@ public class XO {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         boolean isX = true;
 
-        int row = 0;
-        int col = 0;
         while (gameField.isMoveAllowed() && !gameField.isSomebodyWin()) {
+
             gameField.printField();
+
             if (isX) System.out.println("\nКрестики ходят! Сделайте ваш ход.");
             else System.out.println("\nНолики ходят! Сделайте ваш ход.");
-//            String line = reader.readLine();
-            try {
-                row = Integer.parseInt(reader.readLine())-1;
-                if (row > 3 || row < 0) {
-                    System.out.println("Ошибка. Выберите строку от 1 до 3");
-                    continue;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                col = Integer.parseInt(reader.readLine())-1;
-                if (col > 3 || col < 0) {
-                    System.out.println("Ошибка. Выберите столбец от 1 до 3.");
-                    continue;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-
-            switch (gameField.getCellState(row,col)) {
-                case X:
-                    System.out.println("Клетка занята. Выберите другую.");
-                    continue;
-                case O:
-                    System.out.println("Клетка занята. Выберите другую.");
-                    continue;
-                default:
-                    if (isX) {
-                        gameField.changeCellStateTo(row,col,Item.X);
-                        isX = false;
-                    } else {
-                        gameField.changeCellStateTo(row,col,Item.O);
-                        isX = true;
-                    }
-            }
-
-
-        } // end of while loop
+            isX = gameProcess(reader, gameField, isX);
+        }
 
         gameField.printField();
-
 
         if (gameField.isSomebodyWin()) {
             if (isX) System.out.println("Нолики выиграли!");
             else System.out.println("Крестики выиграли!");
         } else System.out.println("Ничья!");
-
-
     }
+
+    private static int inputRow(BufferedReader reader) {
+        int row = 0;
+        System.out.print("Введите номер строки: ");
+        try {
+            row = Integer.parseInt(reader.readLine()) - 1;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (row > 2 || row < 0) {
+            System.out.println("Ошибка. Выберите строку от 1 до 3");
+            return inputRow(reader);
+        } else {
+            return row;
+        }
+    }
+
+    private static int inputCol(BufferedReader reader) {
+        int col = 0;
+        System.out.print("Введите номер столбца: ");
+        try {
+            col = Integer.parseInt(reader.readLine()) - 1;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (col > 2 || col < 0) {
+            System.out.println("Ошибка. Выберите столбец от 1 до 3");
+            return inputCol(reader);
+        } else {
+            return col;
+        }
+    }
+
+    private static boolean gameProcess(BufferedReader reader, Field gameField, boolean isX) {
+
+        int row = inputRow(reader);
+        int col = inputCol(reader);
+
+        switch (gameField.getCellState(row, col)) {
+            case X:
+                System.out.println("Клетка занята. Выберите другую.");
+                gameProcess(reader, gameField, isX);
+            case O:
+                System.out.println("Клетка занята. Выберите другую.");
+                gameProcess(reader, gameField, isX);
+            default:
+                if (isX) {
+                    gameField.changeCellStateTo(row, col, X);
+                    isX = false;
+                } else {
+                    gameField.changeCellStateTo(row, col, O);
+                    isX = true;
+                }
+        }
+        return isX;
+    }
+
 }

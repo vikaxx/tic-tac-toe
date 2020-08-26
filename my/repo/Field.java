@@ -12,6 +12,7 @@ public class Field {
     }
 
     public void printField() {
+        System.out.println("");
         for (int i = 0; i < field.length; i++) {
             System.out.print("|");
             for (int j = 0; j < field.length; j++) {
