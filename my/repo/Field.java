@@ -60,44 +60,55 @@ public class Field {
     }
 
     public boolean isSomebodyWin() {
-        return diagonal() || vertical() || horizontal();
+        return diagonal() || addDiagonal() || vertical() || horizontal();
     }
 
     private boolean diagonal() {
-        if (field[0][0].equals(field[1][1])) {
-            if (field[0][0].equals(field[2][2])) {
-                if (!field[1][1].equals(Item.NONE)) {
-                    return true;
-                }
-            }
-
-        } else if (field[0][2].equals(field[1][1]) && field[0][2].equals(field[2][0]) && !field[1][1].equals(Item.NONE)) {
-            return true;
+        if (field[1][1].equals(Item.NONE)) return false;
+        boolean res = false;
+        for (int i = 0; i < field.length; i++) {
+            res = field[i][i].equals(field[1][1]);
+            if (!res) break;
         }
-        return false;
+        return res;
     }
 
-    private boolean vertical() {
+    private boolean addDiagonal() {
+        if (field[1][1].equals(Item.NONE)) return false;
+        boolean res = false;
         for (int i = 0; i < field.length; i++) {
-            if (!field[i][0].equals(Item.NONE) && field[i][0] == field[i][1] && field[i][1] == field[i][2]) {
-                return true;
-            }
+            res = field[i][field.length - i - 1].equals(field[1][1]);
+            if (!res) break;
         }
-        return false;
+        return res;
+    }
+
+
+    private boolean vertical() {
+        boolean res = false;
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field.length; j++) {
+                if (field[i][i].equals(Item.NONE)) break;
+                res = field[j][i].equals(field[i][i]);
+                if (!res) break;
+            }
+            if (res) return res;
+        }
+        return res;
     }
 
     private boolean horizontal() {
+        boolean res = false;
         for (int i = 0; i < field.length; i++) {
-            if (field[0][i] != Item.NONE && field[0][i] == field[1][i] && field[1][i] == field[2][i]) {
-                return true;
+            for (int j = 0; j < field.length; j++) {
+                if (field[i][i].equals(Item.NONE)) break;
+                res = field[i][j].equals(field[i][i]);
+                if (!res) break;
             }
+            if (res) return res;
         }
-        return false;
+        return res;
     }
-
-
-
-
 
 
 }

@@ -55,7 +55,7 @@ public class XO {
                         isX = true;
                     }
             }
-            
+
 
         } // end of while loop
 
